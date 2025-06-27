@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <title>Your Cart - Fashion Hub</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .cart-container {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 800px;
+            padding: 30px;
+            animation: fadeIn 0.7s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fef1f2;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 2px solid #ff5e62;
+        }
+
+        .cart-item-details {
+            flex: 1;
+            margin-left: 20px;
+        }
+
+        .cart-item-details h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #222;
+        }
+
+        .cart-item-details p {
+            margin: 6px 0;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .remove-button {
+            background-color: #ff4757;
+            color: #fff;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        .remove-button:hover {
+            background-color: #e84118;
+        }
+
+        .cart-summary {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            text-align: right;
+        }
+
+        .cart-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .cart-actions a {
+            padding: 12px 24px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            transition: 0.3s ease-in-out;
+        }
+
+        .continue-shopping {
+            background: #6c5ce7;
+        }
+
+        .continue-shopping:hover {
+            background: #5a4bcf;
+        }
+
+        .checkout {
+            background: #00b894;
+        }
+
+        .checkout:hover {
+            background: #009f7a;
+        }
+
+        @media (max-width: 600px) {
+            .cart-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .cart-item img {
+                margin-bottom: 10px;
+            }
+
+            .cart-actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .cart-actions a {
+                width: 100%;
+                text-align: center;
+            }
+
+            .cart-summary {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cart-container">
+        <h1>🛒 Your Cart</h1>
+        {% if cart_items %}
+            {% for item in cart_items %}
+                <div class="cart-item">
+                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                    <div class="cart-item-details">
+                        <h3>{{ item.product.name }}</h3>
+                        <p>Quantity: {{ item.quantity }}</p>
+                        <p>Price: ₹{{ item.total_price }}</p>
+                    </div>
+                    <form action="{% url 'remove_from_cart' item.product.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="remove-button">Remove</button>
+                    </form>
+                </div>
+            {% endfor %}
+            <div class="cart-summary">
+                Total: ₹{{ total_price }}
+            </div>
+            <div class="cart-actions">
+                <a href="{% url 'home' %}" class="continue-shopping">← Continue Shopping</a>
+                <a href="{% url 'checkout' %}" class="checkout">Checkout →</a>
+            </div>
+        {% else %}
+            <p style="text-align: center; font-size: 16px;">Your cart is empty. Let's start shopping! 🎉</p>
+            <div style="margin-top: 20px; text-align: center;">
+                <a href="{% url 'home' %}" class="continue-shopping">Go to Home</a>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

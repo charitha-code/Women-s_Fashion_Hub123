@@ -1,0 +1,35 @@
+\<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <title>My Wishlist</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h1>My Wishlist</h1>
+
+    {% if products %}
+        <table>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>₹{{ product.price }}</td>
+                    <td>
+                        <a href="{% url 'move_to_cart' product.id %}" class="move-button">Move to Cart</a>
+                        <a href="{% url 'remove_from_wishlist' product.id %}" class="remove-button">Remove</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>Your wishlist is empty.</p>
+    {% endif %}
+
+    <a href="{% url 'home' %}">Continue Shopping</a>
+</body>
+</html>
